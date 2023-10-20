@@ -1,0 +1,65 @@
+<div class="scroll-y clearfix noscroll-x fill body scrollbox">
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 offset-md-2">
+        <div class="card bg-light mt-3">
+          <div class="card-header text-center">Fermeture du ticket</div>
+          <div class="card-body">
+            <div class="card-text">
+              <form [formGroup]="simpleForm" (ngSubmit)="onSubmit()" autocomplete="off">
+                <div class="alert alert-success" role="alert" *ngIf="success">
+                  <div class="text-center">{{success}}</div>
+                </div>
+                <div class="alert alert-danger" role="alert" *ngIf="error">
+                  <div class="text-center">{{error}}</div>
+                </div>
+                <div class="form-group">
+                  <label>Numéro du ticket</label>
+                  <input type="number" autofocus class="form-control" formControlName="orderNumber"
+                         [ngClass]="{
+                              'is-invalid': orderNumber.invalid && (orderNumber.dirty || orderNumber.touched),
+                              'is-valid': orderNumber.valid
+                            }" required />
+                  <div class="invalid-feedback">
+                    Numéro du ticket est obligatoire
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>Etat</label>
+                  <select class="form-control" formControlName="transferStatusId"
+                          [ngClass]="{
+                              'is-invalid': transferStatusId.invalid && (transferStatusId.dirty || transferStatusId.touched),
+                              'is-valid': transferStatusId.valid
+                            }" required>
+                    <option *ngFor="let status of transferStatuses" [value]="status.transferStatusId">
+                      {{status.name}}
+                    </option>
+                  </select>
+                  <div class="invalid-feedback">
+                    Etat est obligatoire
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>Remarques</label>
+                  <textarea class="form-control" rows="2" formControlName="completeNote"></textarea>
+                </div>
+                <div class="form-group">
+                  <div class="pt-2">
+                    <button type="submit" class="btn btn-sm btn-dark mr-2" [disabled]="simpleForm.invalid || submitting">Enregistrer</button>
+                    <button type="submit" class="btn btn-sm btn-danger mr-3" [disabled]="simpleForm.invalid || submitting"
+                            (click)="onCompleteAndPay()">
+                      Fermer et payer
+                    </button>
+                    <span *ngIf="submitting" class="spinner-border spinner-border-sm"></span>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

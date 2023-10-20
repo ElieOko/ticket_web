@@ -1,0 +1,133 @@
+<div class="container-fluid h-100">
+  <div class="row h-100">
+    <div class="col-xs-12 col-md-12 p-0 h-100">
+
+      <kendo-grid #grid [kendoGridBinding]="api.transfers"
+                  [resizable]="true"
+                  [style.height.%]="100"
+                  [sortable]="true"
+                  [loading]="loading"
+                  [scrollable]="true"
+                  [filterable]="enableFilter"
+                  (cellClick)="cellClickHandler($event)"
+                  (cellClose)="cellCloseHandler($event)"
+                  (cancel)="cancelHandler($event)">
+        <ng-template kendoGridToolbarTemplate>
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-sm-12">
+                <span class="mr-2">Début:</span>
+                <kendo-datepicker class="mr-2" [formControl]="startDate" [format]="'dd-MM-yyyy'"></kendo-datepicker>
+                <span class="mr-2">Fin:</span>
+                <kendo-datepicker class="mr-2" [formControl]="endDate" [format]="'dd-MM-yyyy'"></kendo-datepicker>
+                <span class="mr-2">Type:</span>
+                <kendo-combobox class="mr-2" [data]="misc.transferTypes"
+                                [textField]="'displayName'"
+                                [valueField]="'transferTypeId'"
+                                [valuePrimitive]="true"
+                                [formControl]="type">
+                </kendo-combobox>
+                <span class="mr-2">Etat:</span>
+                <kendo-combobox class="mr-3" [data]="misc.transferStatuses"
+                                [textField]="'name'"
+                                [valueField]="'transferStatusId'"
+                                [valuePrimitive]="true"
+                                [formControl]="status">
+                </kendo-combobox>
+                <button type="button" class="k-button" (click)="onLoadTransfers()">Charger</button>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="btn-toolbar mt-2">
+                  <button class='k-button mr-2' [disabled]="!api.hasChanges()" (click)="saveChanges(grid);">Save Changes</button>
+                  <button class='k-button mr-2' [disabled]="!api.hasChanges()" (click)="cancelChanges(grid);">Cancel Changes</button>
+                  <button type="button" class="k-button k-button-icontext mr-2" (click)="toggleFilter()">
+                    <span class="k-icon k-i-filter"></span> Filtrer
+                  </button>
+                  <button class="mr-2" type="button" kendoGridExcelCommand icon="file-excel">Export to Excel</button>
+                  <button type="button" class="k-button" (click)="toggleAdvanced()">Advanced</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+        <kendo-grid-column field="orderNumber" title="N" width="65"
+                           [headerStyle]="{'background-color': '#666','color': '#fff','line-height': '1em'}"></kendo-grid-column>
+        <kendo-grid-column field="transferType" title="" media="md" width="50"
+                           [headerStyle]="{'background-color': '#666','color': '#fff','line-height': '1em'}"></kendo-grid-column>
+        <kendo-grid-column field="amount" title="Montant" media="md" width="100" editor="numeric"
+                           [headerStyle]="{'background-color': '#666','color': '#fff','line-height': '1em'}"></kendo-grid-column>
+        <kendo-grid-column field="currency" title="" media="md" width="55"
+                           [headerStyle]="{'background-color': '#666','color': '#fff','line-height': '1em'}"></kendo-grid-column>
+        <kendo-grid-column field="name" title="Nom" media="md"
+                           [headerStyle]="{'background-color': '#666','color': '#fff','line-height': '1em'}"></kendo-grid-column>
+        <kendo-grid-column field="phone" title="Téléphone" media="md" width="150"
+                           [headerStyle]="{'background-color': '#666','color': '#fff','line-height': '1em'}"></kendo-grid-column>
+        <kendo-grid-column field="dateCreated" title="Début" media="md" width="65"
+                           [headerStyle]="{'background-color': '#666','color': '#fff','line-height': '1em'}"></kendo-grid-column>
+        <kendo-grid-column field="finS" title="FinS" media="md" width="70"
+                           [headerStyle]="{'background-color': '#666','color': '#fff','line-height': '1em'}"></kendo-grid-column>
+        <kendo-grid-column field="dureeS" title="DuréeS" media="md" width="70"
+                           [headerStyle]="{'background-color': '#666','color': '#fff','line-height': '1em'}"></kendo-grid-column>
+        <kendo-grid-column field="finP" title="FinP" media="md" width="65"
+                           [headerStyle]="{'background-color': '#666','color': '#fff','line-height': '1em'}"></kendo-grid-column>
+        <kendo-grid-column field="dureeP" title="DuréeP" media="md" width="75"
+                           [headerStyle]="{'background-color': '#666','color': '#fff','line-height': '1em'}"></kendo-grid-column>
+        <kendo-grid-column field="transferStatus" title="Etat" width="110"
+                           [headerStyle]="{'background-color': '#666','color': '#fff','line-height': '1em'}">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{dataItem.transferStatus.name}}
+          </ng-template>
+          <ng-template kendoGridEditTemplate let-dataItem="dataItem"
+                       let-column="column"
+                       let-formGroup="transferForm">
+            <kendo-combobox [data]="transferStatuses"
+                            [textField]="'name'"
+                            [valueField]="'transferStatusId'"
+                            [formControl]="transferForm.get('transferStatus')">
+            </kendo-combobox>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="completeNote" title="Note" media="md"
+                           [headerStyle]="{'background-color': '#666','color': '#fff','line-height': '1em'}"></kendo-grid-column>
+        <kendo-grid-column field="branch" title="Agence" media="md" *ngIf="advanced"
+                           [headerStyle]="{'background-color': '#666','color': '#fff','line-height': '1em'}"></kendo-grid-column>
+        <kendo-grid-column field="userS" title="UserS" media="md" *ngIf="advanced"
+                           [headerStyle]="{'background-color': '#666','color': '#fff','line-height': '1em'}"></kendo-grid-column>
+        <kendo-grid-column field="userP" title="UserP" media="md" *ngIf="advanced"
+                           [headerStyle]="{'background-color': '#666','color': '#fff','line-height': '1em'}"></kendo-grid-column>
+        <kendo-grid-command-column title="" width="50"
+                                   [headerStyle]="{'background-color': '#666','color': '#fff','line-height': '1em'}">
+          <ng-template kendoGridCellTemplate let-isNew="isNew" let-dataItem>
+            <button type="button" [disabled]="dataItem.completed"
+                    (click)="openDialog(dataItem)" class="k-button k-button-icon"><span class="k-icon k-i-check"></span></button>
+          </ng-template>
+        </kendo-grid-command-column>
+        <ng-template kendoGridDetailTemplate let-dataItem>
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-sm-12">
+                <div style="display:flex; align-items:center; justify-content:center;">
+                  <div style="height:200px; width:200px;">
+                    <a href="{{dataItem.imagePath}}" target="_blank" style="z-index: 3; cursor: zoom-in;">
+                      <img class="img-fluid" [src]="dataItem.imagePath" />
+                    </a>
+                  </div>
+                  <!--<div style="height:200px; width:200px;">
+                    <img class="img-fluid" [src]="dataItem.imagePath" />
+                  </div>
+                    -->
+                </div>
+                
+              </div>
+            </div>
+          </div>
+        </ng-template>
+        <kendo-grid-excel fileName="tickets.xlsx"></kendo-grid-excel>
+      </kendo-grid>
+
+    </div>
+  </div>
+</div>

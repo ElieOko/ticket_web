@@ -1,0 +1,183 @@
+
+<div class="scroll-y clearfix noscroll-x fill body scrollbox">
+
+  <div class="container">
+    <div class="row" *ngIf="!printMode">
+      <div class="col-md-8 offset-md-2">
+        <div class="card bg-light mt-3">
+          <div class="card-header text-center">Ouverture simple du ticket</div>
+          <div class="card-body">
+            <div class="card-text">
+              <form [formGroup]="ticketForm" (ngSubmit)="onSubmit()" autocomplete="off">
+                <div class="alert alert-danger" role="alert" *ngIf="error">
+                  <div class="text-center">{{error}}</div>
+                </div>
+                <div class="form-row">
+                  <div class="col-sm-8 form-group">
+                    <label>Montant</label>
+                    <input type="number" class="form-control" formControlName="amount"
+                           [ngClass]="{
+                              'is-invalid': amount.invalid && (amount.dirty || amount.touched),
+                              'is-valid': amount.valid
+                            }" required />
+                    <div class="invalid-feedback">
+                      Veuillez entrer un montant
+                    </div>
+                  </div>
+                  <div class="col-sm-4 form-group">
+                    <label>Devise</label>
+                    <select class="form-control" formControlName="currencyId"
+                            [ngClass]="{
+                              'is-invalid': currencyId.invalid && (currencyId.dirty || currencyId.touched),
+                              'is-valid': currencyId.valid
+                            }" required>
+                      <option *ngFor="let currency of misc.currencies" [value]="currency.currencyId">
+                        {{currency.currencyCode}}
+                      </option>
+                    </select>
+                    <div class="invalid-feedback">
+                      Veuillez choisir une devise
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="col-sm-6 form-group">
+                    <label>Téléphone</label>
+                    <input type="text" class="form-control" formControlName="phone"
+                           [ngClass]="{
+                              'is-invalid': phone.invalid && (phone.dirty || phone.touched),
+                              'is-valid': phone.valid
+                            }" required />
+                    <div class="invalid-feedback">
+                      <div *ngIf="phone.errors?.required">
+                        Numero est obligatoire
+                      </div>
+                      <div *ngIf="phone.errors?.pattern">
+                        Veuillez entrer un numero valide
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-6 form-group">
+                    <label>Type</label>
+                    <select class="form-control" formControlName="transferTypeId"
+                            [ngClass]="{
+                              'is-invalid': transferTypeId.invalid && (transferTypeId.dirty || transferTypeId.touched),
+                              'is-valid': transferTypeId.valid
+                            }" required>
+                      <option *ngFor="let type of misc.transferTypes" [value]="type.transferTypeId">
+                        {{type.displayName}}
+                      </option>
+                    </select>
+                    <div class="invalid-feedback">
+                      Veuillez choisir un type
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label>Motif</label>
+                  <textarea class="form-control" rows="3" formControlName="note"></textarea>
+                </div>
+                <div class="form-group">
+                  <div class="pt-2">
+                    <button type="submit" class="btn btn-dark mr-3" [disabled]="ticketForm.invalid || submitting">Enregistrer</button>
+                    <span *ngIf="submitting" class="spinner-border spinner-border-sm"></span>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row" *ngIf="printMode">
+      <div class="col-md-12">
+        <div class="ticket-box mt-3 bg-light p-2" *ngIf="transfer">
+          <div class="ticket-line">
+            <span>{{transfer.orderNumber}}</span>
+            <span>Original</span>
+          </div>
+          <div class="ticket-line">
+            <span>Soficom Transfert</span>
+          </div>
+          <div class="ticket-line">
+            <span *ngIf="transfer.transferTypeId == 1 || transfer.transferTypeId == 4">{{transfer.fromBranchName}}</span>
+            <span *ngIf="transfer.transferTypeId == 2 || transfer.transferTypeId == 3
+                  || transfer.transferTypeId == 5 || transfer.transferTypeId == 6">
+              {{transfer.toBranchName}}
+            </span>
+          </div>
+          <div class="ticket-line">
+            <span>{{transfer.transferTypeName}}</span>
+          </div>
+          <div class="ticket-line">
+            <span *ngIf="transfer.transferTypeId == 1 || transfer.transferTypeId == 4">{{transfer.senderName}}</span>
+            <span *ngIf="transfer.transferTypeId == 2 || transfer.transferTypeId == 3
+                  || transfer.transferTypeId == 5 || transfer.transferTypeId == 6">
+              {{transfer.receiverName}}
+            </span>
+          </div>
+          <div class="ticket-line">
+            <span>{{transfer.currencyCode}}</span>
+          </div>
+          <div class="ticket-line">
+            <span>{{transfer.dateCreated | date:'yyyy-MM-dd HH:mm'}}</span>
+          </div>
+          <hr class="dashed" />
+          <div class="ticket-line">
+            <span>{{transfer.orderNumber}}</span>
+            <span>Client</span>
+          </div>
+          <div class="ticket-line">
+            <span>Soficom Transfert</span>
+          </div>
+          <div class="ticket-line">
+            <span *ngIf="transfer.transferTypeId == 1 || transfer.transferTypeId == 4">{{transfer.fromBranchName}}</span>
+            <span *ngIf="transfer.transferTypeId == 2 || transfer.transferTypeId == 3
+                  || transfer.transferTypeId == 5 || transfer.transferTypeId == 6">
+              {{transfer.toBranchName}}
+            </span>
+          </div>
+          <div class="ticket-line">
+            <span>{{transfer.transferTypeName}}</span>
+          </div>
+          <div class="ticket-line">
+            <span *ngIf="transfer.transferTypeId == 1 || transfer.transferTypeId == 4">{{transfer.senderName}}</span>
+            <span *ngIf="transfer.transferTypeId == 2 || transfer.transferTypeId == 3
+                  || transfer.transferTypeId == 5 || transfer.transferTypeId == 6">{{transfer.receiverName}}</span>
+          </div>
+          <div class="ticket-line">
+            <span>{{transfer.currencyCode}}</span>
+          </div>
+          <div class="ticket-line">
+            <span>{{transfer.dateCreated | date:'yyyy-MM-dd HH:mm'}}</span>
+          </div>
+          <div class="ticket-info mt-1">
+            <span>Toujours votre écoute, pour mieux vous servir en toute sécurité et rapidité</span>
+            <span>Plus d'info +243 819 872 444, +243 998724 444</span>
+            <span>email: dir@groupsoficom.com</span>
+            <span>web:http://www.groupesoficom.com</span>
+            <span>Veuillez nous contacter au cas de problème</span>
+          </div>
+        </div>
+        <div class="d-print-none mt-3">
+          <button type="button" class="k-button mr-3" (click)="onPrint()">Imprimer</button>
+          <button type="button" class="k-button mr-3" (click)="onNew()">Fermer</button>
+          <button type="button" class="k-button mr-3" (click)="onGoBack()">Retour</button>
+          <button type="button" class="k-button" (click)="onMarkAsPaid()">Marquer comme payé</button>
+          <div class="alert alert-success" role="alert" *ngIf="success">
+            <div class="text-center">{{success}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+
+
+
+
+</div>
+
+
+

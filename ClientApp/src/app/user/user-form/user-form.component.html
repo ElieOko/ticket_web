@@ -1,0 +1,157 @@
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card bg-light mt-2">
+        <div class="card-header">Nouveau utilisateur</div>
+        <div class="card-body">
+
+
+          <form [formGroup]="userForm" (ngSubmit)="submitHandler()" autocomplete="off">
+            <div class="alert alert-danger" role="alert" *ngIf="error">
+              <div class="text-center">{{error}}</div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-sm-6">
+                <label for="userName">Nom d'utilisateur</label>
+                <input id="userName" name="userName" class="form-control form-control-sm" type="text" formControlName="userName"
+                       [ngClass]="{
+                              'is-invalid': userName.invalid && (userName.dirty || userName.touched),
+                              'is-valid': userName.valid
+                            }" required />
+                <span class="spinner-border spinner-border-sm spinner-span"
+                      *ngIf="userName.pending"></span>
+                <div class="invalid-feedback">
+                  <div *ngIf="userName.errors?.required">
+                    Identifiant est obligatoire
+                  </div>
+                  <div *ngIf="userName.errors?.uniqueUsername">
+                    Cet identifiant est déjà pris
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="form-group col-sm-6">
+                <label for="fullName">Nom complet</label>
+                <input id="fullName" name="fullName" class="form-control form-control-sm" type="text" formControlName="fullName" />
+              </div>
+
+
+            </div>
+
+
+            <div class="form-row">
+
+              <div class="form-group col-sm-5">
+                <label for="password">Mot de passe</label>
+                <input id="password" name="password" class="form-control form-control-sm" [type]="passwordInputType" formControlName="password"
+                       [ngClass]="{
+                              'is-invalid': password.invalid && (password.dirty || password.touched),
+                              'is-valid': password.valid
+                            }" required />
+                <div class="invalid-feedback">
+                  Mot de passe est obligatoire
+                </div>
+              </div>
+
+              <div class="form-group col-sm-5">
+                <label for="confirmPassword">Confirmer Mot de passe</label>
+                <input id="confirmPassword" name="confirmPassword" class="form-control form-control-sm" [type]="passwordInputType" formControlName="confirmPassword"
+                       [ngClass]="{
+                              'is-invalid': confirmPassword.invalid && (confirmPassword.dirty || confirmPassword.touched),
+                              'is-valid': confirmPassword.valid
+                            }" required />
+                <div class="invalid-feedback">
+                  Confimer Mot de passe est obligatoire
+                </div>
+              </div>
+
+              <div class="col-sm-2">
+                <div style="display: inline-block; margin-bottom: .5rem;">&nbsp;</div>
+                <div class="checkbox p-2">
+                  <label for="showPassword">
+                    <input id="showPassword" type="checkbox" (change)="onShowPassword($event.target.checked)"> Afficher
+                  </label>
+                </div>
+              </div>
+
+              <div class="col-sm-12 py-2" *ngIf="userForm.errors?.passwordMatch && (password.touched || password.dirty)
+                   && (confirmPassword.touched || confirmPassword.dirty) " 
+                   style="font-size: 80%; color: #dc3545;">
+                Les mots de passe ne se correspondent pas
+              </div>
+
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="accessLevel">Niveau d'accès</label>
+                <select id="accessLevel" name="accessLevel" class="form-control form-control-sm" formControlName="accessLevel"
+                        [ngClass]="{
+                              'is-invalid': accessLevel.invalid && (accessLevel.dirty || accessLevel.touched),
+                              'is-valid': accessLevel.valid
+                            }" required>
+                  <option value="null" selected="selected" disabled>--- choisissez le niveau d'accès ---</option>
+                  <option value="1">Utilisateur</option>
+                  <option value="2">Chef d'agence</option>
+                  <option value="3">Administrateur</option>
+                </select>
+
+                <div class="invalid-feedback">
+                  <div *ngIf="accessLevel.errors?.required">
+                    Niveau d'accès est obligatoire
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group col-md-6">
+                <label for="branch">Agence</label>
+                <kendo-combobox id="branch" class="form-control form-control-sm" [data]="branches"
+                                [textField]="'branchName'"
+                                [valueField]="'branchId'"
+                                [valuePrimitive]="true"
+                                (filterChange)="handleFilter($event)"
+                                formControlName="branch">
+                </kendo-combobox>
+                <div class="text-danger" style="margin-top: .25rem; font-size: 80%;"
+                     *ngIf="branch.invalid && (branch.dirty || branch.touched)">
+                  Agence est obligatoire
+                </div>
+              </div>
+
+
+            </div>
+
+            <div class="form-group">
+              <label for="permissions">Veuillez choisir un ou plusieurs types de transferts que l'utilisateur peut voir</label>
+              <select id="permissions" name="permissions" multiple formControlName="permissions" class="form-control" size="6">
+                <option *ngFor="let type of misc.transferTypes" [value]="type.transferTypeId">
+                  {{type.displayName}}
+                </option>
+              </select>
+              <small class="form-text text-muted">Maintenez la touche Ctrl en cliquant pour selectionner plusieurs</small>
+            </div>
+
+            <div class="form-group">
+              <div>
+                <button type="submit" [disabled]="userForm.invalid || submitting"
+                        class="btn btn-sm btn-primary mr-2">
+                  Enregistrer <span *ngIf="submitting && !submitAndNew" class="spinner-border spinner-border-sm ml-2"></span>
+                </button>
+                <button type="submit" [disabled]="userForm.invalid || submitting"
+                        (click)="onSubmitAndNew()" class="btn btn-sm btn-primary mr-4">
+                  Enregistrer et nouveau <span *ngIf="submitting && submitAndNew" class="spinner-border spinner-border-sm ml-2"></span>
+                </button>
+                <button type="button" [disabled]="submitting" class="btn btn-sm btn-secondary"
+                        (click)="cancelHandler()">Annuler</button>
+              </div>
+            </div>
+
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

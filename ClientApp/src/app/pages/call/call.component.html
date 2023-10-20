@@ -1,0 +1,100 @@
+
+<div class="scroll-y clearfix noscroll-x fill body scrollbox">
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 offset-md-2">
+        <div class="card bg-light mt-3">
+          <div class="card-header text-center">Appels du ticket</div>
+          <div class="card-body">
+            <form [formGroup]="callForm" (ngSubmit)="onSubmit()" autocomplete="off">
+              <div class="alert alert-success" role="alert" *ngIf="successCall">
+                <div class="text-center">{{successCall}}</div>
+              </div>
+              <div class="alert alert-danger" role="alert" *ngIf="callError">
+                <div class="text-center">{{callError}}</div>
+              </div>
+
+              <div class="form-group">
+                <label for="orderNumber">Numéro du ticket</label>
+                <input id="orderNumber" name="orderNumber" type="number"
+                       class="form-control" formControlName="orderNumber"
+                       [ngClass]="{
+                              'is-invalid': orderNumber.invalid && (orderNumber.dirty || orderNumber.touched),
+                              'is-valid': orderNumber.valid
+                            }" required />
+                <div class="invalid-feedback">
+                  Numéro du ticket est obligatoire
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="counter">Guichet</label>
+                <select id="counter" name="counter" class="form-control" formControlName="counter"
+                        [ngClass]="{
+                              'is-invalid': counter.invalid && (counter.dirty || counter.touched),
+                              'is-valid': counter.valid
+                            }" required>
+                  <option *ngFor="let counter of misc.counters" [ngValue]="counter">
+                    {{counter.name}}
+                  </option>
+                </select>
+                <div class="invalid-feedback">
+                  Guichet est obligatoire
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="note">Remarques</label>
+                <textarea id="note" name="note" class="form-control" rows="2" formControlName="note"></textarea>
+              </div>
+              <div class="form-group">
+                <div class="pt-2">
+                  <button type="button" class="btn btn-dark mr-2"
+                          [disabled]="callForm.invalid || callLoading" (click)="onSubmit()">
+                    Appeler
+                  </button>
+                  <button type="submit" class="btn btn-warning mr-3" [disabled]="callForm.invalid || callLoading"
+                          (click)="onCallForPayment()">
+                    Paiement
+                  </button>
+                  <span *ngIf="callLoading" class="spinner-border spinner-border-sm"></span>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-8 offset-md-2">
+        <div class="card bg-light mt-3">
+          <div class="card-header text-center">Message</div>
+          <div class="card-body">
+            <div *ngIf="messageError" class="text-center text-danger">{{messageError}}</div>
+            <div class="form-group">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" class="form-control" rows="2" [(ngModel)]="message"></textarea>
+            </div>
+            <div class="form-group">
+              <div class="pt-3">
+                <button type="button" class="btn btn-dark mr-2"
+                        [disabled]="!canSendMessage || messageLoading" (click)="onSendMessage()">Envoyer</button>
+                <button type="button" class="btn btn-dark" (click)="clearMessage()">
+                  Effacer
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+
+
+</div>
+
+
+ 

@@ -1,0 +1,144 @@
+.page-wrapper {
+  height: 100%;
+  width: 100%;
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: flex;
+  -ms-flex-align: center;
+  -ms-flex-pack: center;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  justify-content: center;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  background-color: #c82333;
+}
+
+.form-signin {
+  width: 100%;
+  max-width: 400px;
+  padding: 35px;
+  margin: 0 auto;
+  box-shadow: 0 3px 20px 0px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: 0 3px 20px 0px rgba(0, 0, 0, 0.1);
+  -webkit-box-shadow: 0 3px 20px 0px rgba(0, 0, 0, 0.1);
+  -o-box-shadow: 0 3px 20px 0px rgba(0, 0, 0, 0.1);
+  -ms-box-shadow: 0 3px 20px 0px rgba(0, 0, 0, 0.1);
+}
+
+.form-signin .checkbox {
+  font-weight: 400;
+}
+
+.form-signin .form-control {
+  position: relative;
+  box-sizing: border-box;
+  height: auto;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+
+.form-signin input[type="text"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.txt1 {
+  font-family: OpenSans-Regular;
+  font-size: 15px;
+  line-height: 1.4;
+  color: #999999;
+}
+
+.txt2 {
+  font-family: OpenSans-Regular;
+  font-size: 15px;
+  line-height: 1.4;
+  color: #4272d7;
+}
+
+.hov1:hover {
+  text-decoration: underline;
+}
+
+.p-b-4 {
+  padding-bottom: 4px;
+}
+
+.logo {
+  height: 24px;
+  margin: 0 auto;
+  overflow: visible;
+  position: relative;
+  width: 75px;
+}
+
+.logo-container {
+  width: 100%;
+}
+
+
+.headingText {
+  color: #202124;
+  padding-bottom: 0;
+  padding-top: 16px;
+  font-family: 'Google Sans','Noto Sans Myanmar UI',arial,sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1.3333;
+  margin-bottom: 0;
+  margin-top: 0;
+  text-indent: -1px;
+}
+
+.headingSubtext {
+  color: #202124;
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: .1px;
+  line-height: 1.5;
+  padding-bottom: 0;
+  padding-top: 8px;
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+svg[_ngcontent-ycr-c37]:not(:root).svg-inline--fa {
+  overflow: visible;
+}
+
+.svg-inline--fa.fa-w-16[_ngcontent-ycr-c37] {
+  width: 1em;
+}
+
+.svg-inline--fa[_ngcontent-ycr-c37] {
+  display: inline-block;
+  font-size: inherit;
+  height: 1em;
+  overflow: visible;
+  vertical-align: -.125em;
+}
+
+@media (max-width: 430px) {
+  .page-wrapper {
+    padding: 0;
+  }
+
+  .form-signin {
+    margin: 0;
+    height: 100%;
+    border-radius: 0;
+  }
+}
